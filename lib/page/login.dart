@@ -23,8 +23,13 @@ class LoginState extends State<LoginPage> {
   GlobalKey<FormState> _formKey = GlobalKey();
 
   @override
-  Widget build(BuildContext context) {
+  void initState() {
     deviceSize = MediaQuery.of(context).size;
+    super.initState();
+  }
+
+  @override
+  Widget build(BuildContext context) {
     return _buildLoginBody(context);
   }
 
@@ -101,14 +106,14 @@ class LoginState extends State<LoginPage> {
     }
     CommonUtils.showLoading(context);
     Request().login(_name, _pwd).then((result) {
-      Navigator.pop(context);
+      Navigator.of(context, rootNavigator: true).pop();
       ToastUtils.showShort('登陆成功');
       WanApp.isLogin = true;
       _setUser(result);
       bus.fire(LoginEvent(data: result));
       Navigator.pop(context);
     }).catchError((e) {
-      Navigator.pop(context);
+      Navigator.of(context, rootNavigator: true).pop();
       ToastUtils.showShort(e.message);
     });
   }

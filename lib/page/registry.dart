@@ -26,6 +26,7 @@ class RegistryState extends State<RegistryPage> {
   @override
   void initState() {
     super.initState();
+    deviceSize = MediaQuery.of(context).size;
   }
 
   _buildLoginBackground(BuildContext context) {
@@ -52,7 +53,6 @@ class RegistryState extends State<RegistryPage> {
   }
 
   _buildCard() {
-    deviceSize = MediaQuery.of(context).size;
     return Center(
       child: SizedBox(
         height: deviceSize.height / 2 - 30,

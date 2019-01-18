@@ -61,11 +61,11 @@ class AddTodoState extends State<TodoDetailPage> {
       appBar: AppBar(
         title: Text(_isAdd ? '添加待办清单' : '待办事项'),
       ),
-      body: _buildAdd(),
+      body: _buildAdd(context),
     );
   }
 
-  _buildAdd() {
+  _buildAdd(context) {
     return Container(
       child: Padding(
         padding: EdgeInsets.all(15),
@@ -126,7 +126,7 @@ class AddTodoState extends State<TodoDetailPage> {
                   SizedBox(
                     height: 20,
                   ),
-                  _buildBtns()
+                  _buildBtns(context)
                 ],
               )),
         ),
@@ -134,7 +134,7 @@ class AddTodoState extends State<TodoDetailPage> {
     );
   }
 
-  _buildBtns() {
+  _buildBtns(context) {
     return _isAdd
         ? Row(
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -148,7 +148,7 @@ class AddTodoState extends State<TodoDetailPage> {
               ),
               RaisedButton(
                 onPressed: () {
-                  _addTodo();
+                  _addTodo(context);
                 },
                 child: Text('确定'),
               )
@@ -180,19 +180,19 @@ class AddTodoState extends State<TodoDetailPage> {
                     onPressed: () {
                       showDialog(
                           context: context,
-                          builder: (context) => AlertDialog(
+                          builder: (buildContext) => AlertDialog(
                                 content: Text('确定删除这条待办事项？'),
                                 actions: <Widget>[
                                   FlatButton(
                                     onPressed: () {
-                                      Navigator.pop(context);
+                                      Navigator.pop(buildContext);
                                     },
                                     child: Text('取消'),
                                   ),
                                   FlatButton(
                                     onPressed: () {
-                                      Navigator.pop(context);
-                                      _deleteTodo();
+                                      Navigator.pop(buildContext);
+                                      _deleteTodo(context);
                                     },
                                     child: Text('确定'),
                                   )
@@ -213,7 +213,7 @@ class AddTodoState extends State<TodoDetailPage> {
                   RaisedButton(
                     onPressed: () {
                       if (_isEdit) {
-                        _updateTodo();
+                        _updateTodo(context);
                       } else {
                         Navigator.pop(context);
                       }
@@ -227,7 +227,7 @@ class AddTodoState extends State<TodoDetailPage> {
   }
 
   //新增待办事项
-  _addTodo() {
+  _addTodo(context) {
     _form.currentState.save();
     if (_title == null || _title.isEmpty) {
       ToastUtils.showShort('请填写标题');
@@ -244,30 +244,30 @@ class AddTodoState extends State<TodoDetailPage> {
         priority: 0);
     Request().addTodo(dto).then((todo) {
       bus.fire(EditTodoEvent(widget.type));
-      Navigator.pop(context);
+      Navigator.of(context, rootNavigator: true).pop();
       Navigator.pop(context);
     }).catchError((e) {
-      Navigator.pop(context);
+      Navigator.of(context, rootNavigator: true).pop();
       ToastUtils.showShort(e.message);
     });
   }
 
   //删除待办事项
-  _deleteTodo() {
+  _deleteTodo(context) {
     CommonUtils.showLoading(context);
     Request().deleteTodo(widget.dto.id).then((todo) {
       bus.fire(EditTodoEvent(widget.dto.type));
       ToastUtils.showShort('删除成功');
-      Navigator.pop(context);
+      Navigator.of(context, rootNavigator: true).pop();
       Navigator.pop(context);
     }).catchError((e) {
-      Navigator.pop(context);
+      Navigator.of(context, rootNavigator: true).pop();
       ToastUtils.showShort(e.message);
     });
   }
 
   //更新待办事项
-  _updateTodo() {
+  _updateTodo(context) {
     _form.currentState.save();
     if (_title == null || _title.isEmpty) {
       ToastUtils.showShort('请填写标题');
@@ -290,10 +290,10 @@ class AddTodoState extends State<TodoDetailPage> {
     Request().updateTodo(dto).then((todo) {
       bus.fire(EditTodoEvent(widget.dto.type));
       ToastUtils.showShort('更新成功');
-      Navigator.pop(context);
+      Navigator.of(context, rootNavigator: true).pop();
       Navigator.pop(context);
     }).catchError((e) {
-      Navigator.pop(context);
+      Navigator.of(context, rootNavigator: true).pop();
       ToastUtils.showShort(e.message);
     });
   }

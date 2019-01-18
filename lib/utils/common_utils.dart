@@ -19,7 +19,7 @@ class CommonUtils {
     showDialog(
         context: context,
         barrierDismissible: false,
-        builder: (context) {
+        builder: (buildContext) {
           return Center(
             child: SizedBox(
               width: 100,

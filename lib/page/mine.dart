@@ -120,18 +120,18 @@ class MineState extends State<MinePage> {
             //退出登录
             showDialog(
                 context: context,
-                builder: (context) => AlertDialog(
+                builder: (buildContext) => AlertDialog(
                       content: Text('确定要退出登录么？'),
                       actions: <Widget>[
                         FlatButton(
                             child: const Text('取消'),
                             onPressed: () {
-                              Navigator.pop(context);
+                              Navigator.pop(buildContext);
                             }),
                         FlatButton(
                             child: const Text('确定'),
                             onPressed: () {
-                              Navigator.pop(context);
+                              Navigator.pop(buildContext);
                               _logout();
                             })
                       ],
@@ -148,13 +148,13 @@ class MineState extends State<MinePage> {
   _logout() {
     CommonUtils.showLoading(context);
     Request().logout().then((res) {
-      Navigator.pop(context);
+      Navigator.of(context, rootNavigator: true).pop();
       setState(() {
         WanApp.isLogin = false;
         _name = '未登录';
       });
     }).catchError((e) {
-      Navigator.pop(context);
+      Navigator.of(context, rootNavigator: true).pop();
       ToastUtils.showShort(e.message);
     });
   }
